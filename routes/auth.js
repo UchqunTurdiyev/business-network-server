@@ -19,7 +19,7 @@ router.post('/signup', (req, res) => {
 
 	User.findOne({ email }).then(savedUser => {
 		if (savedUser) {
-			return res.status(422).json({ error: 'User already exist with email' });
+			return res.status(422).json({ error: 'User already exist with email 😱' });
 		}
 		bcrypt.hash(password, 10).then(hashedPassword => {
 			const user = new User({ email, name, password: hashedPassword });
@@ -39,11 +39,11 @@ router.post('/signup', (req, res) => {
 router.post('/signin', (req, res) => {
 	const { email, password } = req.body;
 	if (!email || !password) {
-		res.status(422).json({ error: 'Please add email or password' });
+		res.status(422).json({ error: 'Please add email or password 😱' });
 	}
 	User.findOne({ email }).then(savedUser => {
 		if (!savedUser) {
-			res.status(422).json({ error: 'Invalid email or password' });
+			res.status(422).json({ error: 'Invalid email or password 😱' });
 		}
 		bcrypt
 			.compare(password, savedUser.password)
@@ -51,9 +51,10 @@ router.post('/signin', (req, res) => {
 				if (doPassword) {
 					// return res.json({ msg: 'Successfully sign' });
 					const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
-					res.json({ token });
+					const { _id, name, email } = savedUser;
+					res.json({ token, user: { _id, name, email } });
 				} else {
-					return res.status(422).json({ error: 'Invalid or password' });
+					return res.status(422).json({ error: 'Invalid or password 😱' });
 				}
 			})
 			.catch(err => {

@@ -11,12 +11,14 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+mongoose.connect(MONGO_URI);
+
 require('./models/users');
+require('./models/post');
 
 app.use(express.json());
 app.use(require('./routes/auth'));
-
-mongoose.connect(MONGO_URI);
+app.use(require('./routes/post'));
 
 mongoose.connection.on('connected', () => {
 	console.log('MongoDB connected successfully');
